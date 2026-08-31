@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef, useMemo } from "react"
 import { CSS, S } from "./styles.js";
 import { weeks } from "./data/program.js";
 import { dayStats, buildLiftHistory } from "./lib/calc.js";
-import { loadLocal, saveLocal } from "./lib/storage.js";
+import { loadLocal, saveLocal, STORAGE_KEYS } from "./lib/storage.js";
 
 import HomeScreen from "./components/HomeScreen.jsx";
 import DayScreen from "./components/DayScreen.jsx";
@@ -89,6 +89,13 @@ export default function App() {
     });
   }, []);
 
+  const resetApp = useCallback(() => {
+    STORAGE_KEYS.forEach((k) => {
+      try { localStorage.removeItem(k); } catch (e) {}
+    });
+    window.location.reload();
+  }, []);
+
   const week = weeks[weekIdx];
   const day = week.days[Math.min(dayIdx, week.days.length - 1)];
   const dayKey = `w${week.n}-d${dayIdx}`;
@@ -111,6 +118,7 @@ export default function App() {
             weeks={weeks} weekIdx={weekIdx} setWeekIdx={setWeekIdx}
             week={week} setDayIdx={setDayIdx} setScreen={setScreen}
             doneCount={doneCount} totalDays={totalDays}
+            onReset={resetApp}
           />
         )}
         {screen === "day" && (

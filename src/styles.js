@@ -344,6 +344,12 @@ export const S = {
     textTransform: "uppercase", cursor: "pointer", fontFamily: "'Inter', sans-serif",
     boxShadow: `0 6px 22px ${RED}55`,
   },
+  sheetActionDanger: {
+    flex: 2, padding: "14px 0", borderRadius: 26, background: RED_HI, border: "none",
+    color: "#fff", fontSize: 11.5, fontWeight: 800, letterSpacing: 0.8,
+    textTransform: "uppercase", cursor: "pointer", fontFamily: "'Inter', sans-serif",
+    boxShadow: `0 6px 22px ${RED_HI}55`,
+  },
 
   // ---- Rest timer ----
   timerRingWrap: { display: "flex", justifyContent: "center", margin: "6px 0 22px", position: "relative" },
@@ -436,6 +442,14 @@ export const S = {
   },
   testAttemptWeight: { fontSize: 12.5, color: TXT, fontWeight: 700, flex: 1 },
   testAttemptRemove: { background: "transparent", border: "none", color: DIM, cursor: "pointer", padding: 4 },
+
+  dangerLink: {
+    display: "block", width: "100%", textAlign: "center",
+    padding: "10px 0 4px", background: "transparent", border: "none",
+    color: "rgba(255,59,48,0.6)", fontSize: 10.5, fontWeight: 700, letterSpacing: 1,
+    textTransform: "uppercase", cursor: "pointer", fontFamily: "'Inter', sans-serif",
+    marginTop: 8,
+  },
 
   liftDetailValidatedTag: {
     display: "inline-flex", alignItems: "center", gap: 5,

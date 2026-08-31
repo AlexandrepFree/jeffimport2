@@ -1,3 +1,5 @@
+export const STORAGE_KEYS = ["pb-maxes", "pb-setlog", "pb-sessions", "pb-test1rm"];
+
 export function loadLocal(key) {
   try {
     const raw = localStorage.getItem(key);

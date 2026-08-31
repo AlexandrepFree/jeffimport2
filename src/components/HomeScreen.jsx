@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { Play } from "lucide-react";
 import ScreenLayout from "./ScreenLayout.jsx";
+import ConfirmSheet from "./ConfirmSheet.jsx";
 import { S } from "../styles.js";
 import { fmt, dayIntensity } from "../lib/calc.js";
 import { LIFTS } from "../data/program.js";
 
-export default function HomeScreen({ maxes, saveMaxes, weeks, weekIdx, setWeekIdx, week, setDayIdx, setScreen, doneCount, totalDays }) {
+export default function HomeScreen({ maxes, saveMaxes, weeks, weekIdx, setWeekIdx, week, setDayIdx, setScreen, doneCount, totalDays, onReset }) {
   const total = ["S", "B", "D"].reduce((a, k) => a + (parseFloat(maxes[k]) || 0), 0);
   const intensity = dayIntensity(week.days[0]);
+  const [confirmReset, setConfirmReset] = useState(false);
 
   return (
     <ScreenLayout
@@ -81,6 +83,21 @@ export default function HomeScreen({ maxes, saveMaxes, weeks, weekIdx, setWeekId
           {intensity ? `${intensity}% 1RM` : "Intensité variable"} · {week.days.length} séances
         </div>
       </div>
+
+      <button style={S.dangerLink} onClick={() => setConfirmReset(true)}>
+        Réinitialiser l'app
+      </button>
+
+      {confirmReset && (
+        <ConfirmSheet
+          title="Réinitialiser l'app ?"
+          message="Toutes les données seront effacées définitivement : maxes, séries loguées, séances terminées et tentatives de test 1RM. Cette action est irréversible."
+          confirmLabel="Tout effacer"
+          cancelLabel="Annuler"
+          onClose={() => setConfirmReset(false)}
+          onConfirm={onReset}
+        />
+      )}
     </ScreenLayout>
   );
 }
