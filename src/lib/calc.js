@@ -89,10 +89,23 @@ export function estimate1RM(weight, reps) {
   return roundToStep((epley + brzycki) / 2, 0.5);
 }
 
+// Seuils qui définissent une série "quasi-maximale" — seules celles-ci sont
+// fiables pour extrapoler un 1RM théorique. Une série de volume (ex. 3×5 à
+// 70-77.5%) ne représente pas le 1RM et fausserait la progression si on
+// l'incluait : on filtre donc sur le %1RM prescrit ET les reps réellement
+// faites, comme demandé — un back-off à 65% ou une série à 8 reps n'entre
+// jamais dans le calcul, même si le poids logué est élevé.
+export const MAX_EFFORT_PCT = 80;
+export const MAX_EFFORT_REPS = 5;
+
+function isMaxEffortSet(exo, reps) {
+  return !!(exo && exo.lift && exo.pct && exo.pct[1] >= MAX_EFFORT_PCT && reps > 0 && reps <= MAX_EFFORT_REPS);
+}
+
 // setLog: { "wIdx-dIdx-exoIdx-setIdx": { weight, reps, rpe } }
 // Retourne, par mouvement (S/B/D), la meilleure estimation 1RM par semaine
-// (triée par semaine), le PR (meilleure estim. toutes semaines confondues)
-// et la dernière estimation connue.
+// (triée par semaine, semaines 1-9 uniquement — la semaine 10 est un test
+// réel, voir buildTestResults), le PR et la dernière estimation connue.
 export function buildLiftHistory(setLog, weeks) {
   const perWeekBest = { S: {}, B: {}, D: {} };
 
@@ -101,7 +114,7 @@ export function buildLiftHistory(setLog, weeks) {
     const week = weeks[wIdx];
     const day = week && week.days[dIdx];
     const exo = day && day.exos[exoIdx];
-    if (!exo || !exo.lift) return;
+    if (!isMaxEffortSet(exo, entry.reps)) return;
     const est = estimate1RM(entry.weight, entry.reps);
     if (!est) return;
     const bucket = perWeekBest[exo.lift];
@@ -118,4 +131,15 @@ export function buildLiftHistory(setLog, weeks) {
     history[lift] = { points, pr, latest };
   });
   return history;
+}
+
+// testResults: { S: [{weight, validated, at}], B: [...], D: [...] }
+// Le 1RM "officiel" d'un mouvement est la plus lourde tentative validée
+// lors de la séance de test (semaine 10) — c'est la vraie validation,
+// pas une estimation.
+export function bestValidatedAttempt(attempts) {
+  if (!attempts || !attempts.length) return null;
+  const valid = attempts.filter((a) => a.validated);
+  if (!valid.length) return null;
+  return Math.max(...valid.map((a) => a.weight));
 }

@@ -406,4 +406,40 @@ export const S = {
     border: `1px solid rgba(228,38,47,0.22)`,
     borderRadius: 16, padding: "16px 18px", marginBottom: 18,
   },
+
+  // ---- Test 1RM (semaine 10) ----
+  testPanel: {
+    borderRadius: 16, padding: "16px 16px 14px", marginBottom: 12,
+    border: "1px solid", overflow: "hidden",
+  },
+  testPanelTitle: { fontSize: 13, fontWeight: 800, letterSpacing: 0.6, textTransform: "uppercase", color: TXT, display: "flex", alignItems: "center" },
+  testPanelSub: { fontSize: 11, color: DIM, fontWeight: 500, marginTop: 3, marginBottom: 16 },
+  testPanelBestRow: { display: "flex", alignItems: "baseline", gap: 8, marginBottom: 16 },
+  testPanelBestValue: { fontSize: 30, fontWeight: 800, color: TXT, letterSpacing: -1 },
+  testPanelBestUnit: { fontSize: 11.5, color: DIM, fontWeight: 700 },
+  testAttemptActions: { display: "flex", gap: 10, marginTop: 4 },
+  testFailBtn: {
+    flex: 1, padding: "13px 0", borderRadius: 24, background: "transparent",
+    border: `1.5px solid ${RED_HI}`, color: RED_HI, fontSize: 11.5, fontWeight: 800,
+    letterSpacing: 0.8, textTransform: "uppercase", cursor: "pointer", fontFamily: "'Inter', sans-serif",
+  },
+  testValidateBtn: {
+    flex: 1, padding: "13px 0", borderRadius: 24, background: GREEN,
+    border: `1.5px solid ${GREEN}`, color: "#08130a", fontSize: 11.5, fontWeight: 800,
+    letterSpacing: 0.8, textTransform: "uppercase", cursor: "pointer", fontFamily: "'Inter', sans-serif",
+  },
+  testAttemptList: { marginTop: 14, borderTop: `1px solid ${LINE}`, paddingTop: 4 },
+  testAttemptRow: { display: "flex", alignItems: "center", gap: 10, padding: "8px 0" },
+  testAttemptBadge: {
+    width: 20, height: 20, borderRadius: "50%", flexShrink: 0,
+    display: "flex", alignItems: "center", justifyContent: "center", color: "#08130a",
+  },
+  testAttemptWeight: { fontSize: 12.5, color: TXT, fontWeight: 700, flex: 1 },
+  testAttemptRemove: { background: "transparent", border: "none", color: DIM, cursor: "pointer", padding: 4 },
+
+  liftDetailValidatedTag: {
+    display: "inline-flex", alignItems: "center", gap: 5,
+    fontSize: 9.5, fontWeight: 800, letterSpacing: 0.6, color: "#08130a",
+    background: GREEN, borderRadius: 8, padding: "3px 8px", marginLeft: 8,
+  },
 };

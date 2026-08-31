@@ -17,6 +17,7 @@ export default function App() {
   const [dayIdx, setDayIdx] = useState(0);
   const [setLog, setSetLog] = useState({});
   const [sessionMeta, setSessionMeta] = useState({});
+  const [testResults, setTestResults] = useState({ S: [], B: [], D: [] });
   const [screen, setScreen] = useState("home"); // home | day | complete | lifts | liftDetail
   const [activeLift, setActiveLift] = useState("S");
   const saveTimer = useRef(null);
@@ -28,6 +29,8 @@ export default function App() {
     if (sl) setSetLog(sl);
     const sm = loadLocal("pb-sessions");
     if (sm) setSessionMeta(sm);
+    const tr = loadLocal("pb-test1rm");
+    if (tr) setTestResults((prev) => ({ ...prev, ...tr }));
   }, []);
 
   const saveMaxes = useCallback((next) => {
@@ -70,6 +73,22 @@ export default function App() {
     });
   }, []);
 
+  const addTestAttempt = useCallback((lift, weight, validated) => {
+    setTestResults((prev) => {
+      const next = { ...prev, [lift]: [...(prev[lift] || []), { weight, validated, at: Date.now() }] };
+      saveLocal("pb-test1rm", next);
+      return next;
+    });
+  }, []);
+
+  const removeTestAttempt = useCallback((lift, index) => {
+    setTestResults((prev) => {
+      const next = { ...prev, [lift]: (prev[lift] || []).filter((_, i) => i !== index) };
+      saveLocal("pb-test1rm", next);
+      return next;
+    });
+  }, []);
+
   const week = weeks[weekIdx];
   const day = week.days[Math.min(dayIdx, week.days.length - 1)];
   const dayKey = `w${week.n}-d${dayIdx}`;
@@ -101,6 +120,7 @@ export default function App() {
             setLog={setLog} onLogSet={logSet} onUnlogSet={unlogSet}
             onEnterDay={onEnterDay}
             onFinish={() => { completeDay(dayKey); setScreen("complete"); }}
+            testResults={testResults} onAddTestAttempt={addTestAttempt} onRemoveTestAttempt={removeTestAttempt}
           />
         )}
         {screen === "complete" && (
@@ -116,10 +136,10 @@ export default function App() {
           />
         )}
         {screen === "lifts" && (
-          <LiftsView maxes={maxes} history={history} setScreen={setScreen} setActiveLift={setActiveLift} />
+          <LiftsView maxes={maxes} history={history} testResults={testResults} setScreen={setScreen} setActiveLift={setActiveLift} />
         )}
         {screen === "liftDetail" && (
-          <LiftDetail lift={activeLift} maxes={maxes} history={history} setScreen={setScreen} />
+          <LiftDetail lift={activeLift} maxes={maxes} history={history} testResults={testResults} setScreen={setScreen} />
         )}
         {showTabBar && <TabBar screen={screen} setScreen={setScreen} />}
       </div>

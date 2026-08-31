@@ -3,12 +3,13 @@ import { Check, ChevronLeft, ChevronDown } from "lucide-react";
 import ScreenLayout from "./ScreenLayout.jsx";
 import SetRow from "./SetRow.jsx";
 import LogSetModal from "./LogSetModal.jsx";
+import TestLiftPanel from "./TestLiftPanel.jsx";
 import { RestTimerSheet, MiniTimerPill, useRestTimer } from "./RestTimer.jsx";
 import { S } from "../styles.js";
 import { LIFTS, GENERAL_WARMUP } from "../data/program.js";
 import { computeLoad, computeWarmupRows, fmt, parseSets, dayEmphasis } from "../lib/calc.js";
 
-export default function DayScreen({ weekIdx, week, day, dayIdx, setDayIdx, maxes, stats, setScreen, setLog, onLogSet, onUnlogSet, onEnterDay, onFinish }) {
+export default function DayScreen({ weekIdx, week, day, dayIdx, setDayIdx, maxes, stats, setScreen, setLog, onLogSet, onUnlogSet, onEnterDay, onFinish, testResults, onAddTestAttempt, onRemoveTestAttempt }) {
   const [warmOpen, setWarmOpen] = useState(false);
   const [genOpen, setGenOpen] = useState(false);
   const [activeSet, setActiveSet] = useState(null); // { exoIdx, setIdx, exo, targetWeight, targetReps }
@@ -55,6 +56,16 @@ export default function DayScreen({ weekIdx, week, day, dayIdx, setDayIdx, maxes
           </button>
         ))}
       </div>
+
+      {day.testLift && (
+        <TestLiftPanel
+          lift={day.testLift}
+          maxes={maxes}
+          attempts={testResults[day.testLift] || []}
+          onAddAttempt={(weight, validated) => onAddTestAttempt(day.testLift, weight, validated)}
+          onRemoveAttempt={(i) => onRemoveTestAttempt(day.testLift, i)}
+        />
+      )}
 
       <div style={S.panel}>
         <div style={S.tableHead}>
